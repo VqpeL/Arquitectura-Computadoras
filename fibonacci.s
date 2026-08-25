@@ -6,12 +6,16 @@
 .LC1:
 	.string	"%d"
 .LC2:
-	.string	"Fibonacci: %d.\n"
+	.string	"Invalido"
 .LC3:
-	.string	"Fibonacci: %d, "
+	.string	"Fibonacci: %d.\n"
 .LC4:
-	.string	"%d, "
+	.string	"Fibonacci: %d, %d.\n"
 .LC5:
+	.string	"Fibonacci: %d, %d, "
+.LC6:
+	.string	"%d, "
+.LC7:
 	.string	"%d.\n"
 	.text
 	.globl	main
@@ -44,26 +48,50 @@ main:
 	movl	$0, %eax
 	call	__isoc99_scanf@PLT
 	movl	-28(%rbp), %eax
-	testl	%eax, %eax
-	jne	.L2
-	movl	-24(%rbp), %eax
-	movl	%eax, %esi
+	subl	$2, %eax
+	movl	%eax, -28(%rbp)
+	movl	-28(%rbp), %eax
+	cmpl	$-1, %eax
+	jge	.L2
 	leaq	.LC2(%rip), %rax
 	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf@PLT
+	call	puts@PLT
 	jmp	.L3
 .L2:
+	movl	-28(%rbp), %eax
+	cmpl	$-1, %eax
+	jne	.L4
 	movl	-24(%rbp), %eax
 	movl	%eax, %esi
 	leaq	.LC3(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
+	jmp	.L3
+.L4:
+	movl	-28(%rbp), %eax
+	testl	%eax, %eax
+	jne	.L5
+	movl	-20(%rbp), %edx
+	movl	-24(%rbp), %eax
+	movl	%eax, %esi
+	leaq	.LC4(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	jmp	.L3
+.L5:
+	movl	-20(%rbp), %edx
+	movl	-24(%rbp), %eax
+	movl	%eax, %esi
+	leaq	.LC5(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
 .L3:
 	movl	$0, -16(%rbp)
-	jmp	.L4
-.L7:
+	jmp	.L6
+.L9:
 	movl	-24(%rbp), %edx
 	movl	-20(%rbp), %eax
 	addl	%edx, %eax
@@ -75,33 +103,33 @@ main:
 	movl	-28(%rbp), %eax
 	subl	$1, %eax
 	cmpl	%eax, -16(%rbp)
-	je	.L5
+	je	.L7
 	movl	-12(%rbp), %eax
 	movl	%eax, %esi
-	leaq	.LC4(%rip), %rax
+	leaq	.LC6(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-	jmp	.L6
-.L5:
+	jmp	.L8
+.L7:
 	movl	-12(%rbp), %eax
 	movl	%eax, %esi
-	leaq	.LC5(%rip), %rax
+	leaq	.LC7(%rip), %rax
 	movq	%rax, %rdi
 	movl	$0, %eax
 	call	printf@PLT
-.L6:
+.L8:
 	addl	$1, -16(%rbp)
-.L4:
+.L6:
 	movl	-28(%rbp), %eax
 	cmpl	%eax, -16(%rbp)
-	jl	.L7
+	jl	.L9
 	movl	$0, %eax
 	movq	-8(%rbp), %rdx
 	subq	%fs:40, %rdx
-	je	.L9
+	je	.L11
 	call	__stack_chk_fail@PLT
-.L9:
+.L11:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
